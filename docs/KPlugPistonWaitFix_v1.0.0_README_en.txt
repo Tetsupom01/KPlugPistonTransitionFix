@@ -1,0 +1,39 @@
+kPlug Piston Wait Fix v1.0.0
+
+Purpose
+-------
+Fixes a kPlug 3.6.0 H-scene issue where, after changing an insertion-state animation
+with Numpad 7 / Backspace, subsequent animation navigation can stop responding.
+
+Confirmed cause
+---------------
+AI_Main.IE_AskPistonChange waits for ToolH.IsInInsertIdle.
+In the affected flow, the animation reaches a loop state instead of InsertIdle,
+so the coroutine can remain blocked and AI_Main.InAnswer may stay true.
+
+Fix
+---
+Only the WaitUntil predicate used by IE_AskPistonChange is patched.
+The wait is allowed to finish when any of the following becomes true:
+
+- IsInInsertIdle
+- IsInLoopAction
+- IsInAnalLoopAction
+
+Scope
+-----
+This plugin does not directly modify Assembly-CSharp.dll or kPlug.dll.
+It applies a runtime patch through BepInEx / Harmony.
+
+Known behavior
+--------------
+The original kPlug transition still briefly stops the couple through ForceCoupleIdle(true).
+This behavior is intentionally left unchanged in v1.0.0.
+Smoother transition behavior can be handled separately.
+
+Target environment
+------------------
+Koikatu / kPlug 3.6.0
+
+Validated kPlug.dll SHA-256:
+880b34324bf1563a1e09a02a6c0960918270fae7463132d47e5fc813bcf4607f
