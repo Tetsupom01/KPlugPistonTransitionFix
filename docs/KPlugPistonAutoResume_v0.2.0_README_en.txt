@@ -1,0 +1,52 @@
+kPlug Piston Auto Resume v0.2.0
+
+Purpose
+-------
+After kPlug changes an insertion/piston animation with Numpad 7 / Backspace,
+automatically resume normal piston motion through the game's normal Go route.
+
+Dependencies
+------------
+Keep KPlugPistonWaitFix.dll v1.0.0 installed.
+This Auto Resume plugin does not replace the stable Wait Fix.
+
+Configuration
+-------------
+BepInEx/config/local.kplug.pistonautoresume.cfg
+
+[Piston Auto Resume]
+
+Enabled = true
+
+ResumeDelaySeconds = 0.8
+
+ResumeDelaySeconds:
+- 0.0 = fastest behavior, equivalent to the validated v0.1.3 timing.
+- 0.8 = default/general-use timing.
+- Up to 3.0 seconds is supported.
+- Disable automatic resume with Enabled = false.
+
+Safety behavior
+---------------
+Auto Resume waits for the real female Animator state to become:
+
+- InsertIdle
+- A_InsertIdle
+
+Only after that safe point does the configurable delay begin.
+
+A scheduled resume is cancelled if, before injection:
+
+- another H command appears in HFlag.click,
+- another animation change becomes pending,
+- AI_Main enters another action,
+- piston motion already resumes normally,
+- or the real Animator leaves InsertIdle / A_InsertIdle during the delay.
+
+This prevents Auto Resume from overwriting a user's Pull or other operation.
+
+Validated basis
+---------------
+Koikatu / kPlug 3.6.0
+
+The stable Wait Fix v1.0.0 remains unchanged.
