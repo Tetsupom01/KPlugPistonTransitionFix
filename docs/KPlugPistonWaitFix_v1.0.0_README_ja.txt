@@ -1,0 +1,41 @@
+kPlug Piston Wait Fix v1.0.0
+
+目的
+----
+kPlug 3.6.0 のHシーンで、挿入状態のアニメーションを
+テンキー7 / Backspace で変更した後、
+その後のアニメーション切り替え操作が反応しなくなることがある問題を修正します。
+
+確認済みの原因
+--------------
+AI_Main.IE_AskPistonChange は ToolH.IsInInsertIdle を待機します。
+問題が発生する処理経路では、アニメーションが InsertIdle ではなくループ状態へ到達するため、
+コルーチンが待機したままになり、AI_Main.InAnswer が true のまま残る場合があります。
+
+修正内容
+--------
+IE_AskPistonChange が使用する WaitUntil の判定部分だけをパッチします。
+以下のいずれかが true になった場合、待機を終了できるようにします。
+
+- IsInInsertIdle が true
+- IsInLoopAction が true
+- IsInAnalLoopAction が true
+
+適用範囲
+--------
+Assembly-CSharp.dll や kPlug.dll を直接書き換えるものではありません。
+BepInEx / Harmony による実行時パッチです。
+
+既知の動作
+----------
+元の kPlug の遷移処理では、ForceCoupleIdle(true) によって
+一時的に男女の動作が停止します。
+v1.0.0 では、この動作は意図的に変更していません。
+より滑らかな遷移については、別機能として改善できます。
+
+対象環境
+--------
+Koikatu / kPlug 3.6.0
+
+動作確認に使用した kPlug.dll の SHA-256:
+880b34324bf1563a1e09a02a6c0960918270fae7463132d47e5fc813bcf4607f
