@@ -1,0 +1,53 @@
+kPlug Piston Auto Resume v0.2.0
+
+目的
+----
+kPlugでテンキー7 / Backspaceを使って挿入・ピストン系アニメーションを変更した後、
+ゲーム本来のGo処理を使って、通常のピストン動作を自動的に再開します。
+
+依存関係
+--------
+KPlugPistonWaitFix.dll v1.0.0 はそのまま導入しておいてください。
+このAuto Resumeプラグインは、安定版のWait Fixを置き換えるものではありません。
+
+設定
+----
+BepInEx/config/local.kplug.pistonautoresume.cfg
+
+[Piston Auto Resume]
+
+Enabled = true
+
+ResumeDelaySeconds = 0.8
+
+ResumeDelaySeconds:
+- 0.0 = 最速。動作確認済みのv0.1.3と同等のタイミングです。
+- 0.8 = 標準設定です。
+- 最大3.0秒まで設定できます。
+- 自動再開を無効にする場合は Enabled = false にしてください。
+
+安全動作
+--------
+Auto Resumeは、実際の女性側Animatorの状態が以下になるまで待機します。
+
+- InsertIdle
+- A_InsertIdle
+
+この安全な状態に到達してから、設定した待ち時間のカウントを開始します。
+
+自動再開を実行する前に、以下のいずれかが発生した場合は予約した再開をキャンセルします。
+
+- HFlag.click に別のH操作が入った
+- 別のアニメーション変更が保留状態になった
+- AI_Main が別の処理に入った
+- ピストン動作が通常処理ですでに再開した
+- 待機中に実Animatorが InsertIdle / A_InsertIdle から離れた
+
+これにより、「抜く」などユーザーが行った別操作を
+Auto Resumeが上書きしてしまうことを防ぎます。
+
+動作確認環境
+------------
+Koikatu / kPlug 3.6.0
+
+安定版のWait Fix v1.0.0には変更を加えていません。
