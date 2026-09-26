@@ -6,7 +6,16 @@ param(
 $ErrorActionPreference = "Stop"
 
 $WorkDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Src = Join-Path $WorkDir "KPlugNullGuardsFix_v0.1.0.cs"
+$RepoRoot = Split-Path -Parent $WorkDir
+$SrcCandidates = @(
+    (Join-Path $RepoRoot "src\NullGuardsFix\KPlugNullGuardsFix_v0.1.0.cs"),
+    (Join-Path $WorkDir "KPlugNullGuardsFix_v0.1.0.cs")
+)
+$Src = $SrcCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+
+if (!$Src) {
+    throw "Source not found. Checked:`n  " + ($SrcCandidates -join "`n  ")
+}
 
 $BuildDir = Join-Path $WorkDir "build\Test"
 $BuildDll = Join-Path $BuildDir "KPlugNullGuardsFix.dll"
