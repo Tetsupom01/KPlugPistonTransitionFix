@@ -5,7 +5,16 @@ $ExpectedKPlugSha256 = "34c13976108db0a18a7ad6b7cfda5517b4a9a83d85c9a90982014426
 $ExpectedAssemblyCSharpSha256 = "0038281caf8df48a7903c55dc389642eeeb3f2a9114bd9d68ac11c8ac0396bc5"
 
 $WorkDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Src = Join-Path $WorkDir "KPlugGaugeSwapFix_v0.2.0.cs"
+$RepoRoot = Split-Path -Parent $WorkDir
+$SrcCandidates = @(
+    (Join-Path $RepoRoot "src\GaugeSwapFix\KPlugGaugeSwapFix_v0.2.0.cs"),
+    (Join-Path $WorkDir "KPlugGaugeSwapFix_v0.2.0.cs")
+)
+$Src = $SrcCandidates | Where-Object { Test-Path $_ } | Select-Object -First 1
+
+if (!$Src) {
+    throw "Source not found. Checked:`n  " + ($SrcCandidates -join "`n  ")
+}
 
 $DstDir = Join-Path $GameRoot "BepInEx\plugins\test"
 $DstDll = Join-Path $DstDir "KPlugGaugeSwapFix.dll"
