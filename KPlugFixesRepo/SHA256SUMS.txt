@@ -1,0 +1,2 @@
+e1e585f3961126adda211d140535ab7590ed2d47c6f0ce97bbd2f146565a1c1e  KPlugNullGuardsFix.dll
+# KPlugGaugeSwapFix.dll: runtime-tested successful binary hash was not recorded.
