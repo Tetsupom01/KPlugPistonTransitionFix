@@ -1,3 +1,9 @@
+> **Repository migration notice**  
+> This project has been consolidated into **Tetsupom01/KPlugFixes** under the `PistonTransitionFix` folders.  
+> This repository is kept as historical reference for the original standalone release. New maintenance should be done in `KPlugFixes`.
+
+---
+
 # kPlug Piston Transition Fix
 
 BepInEx plugins for Koikatu + kPlug 3.6.0 that fix insertion-animation switching issues and optionally resume piston motion automatically after using Numpad 7 / Backspace.
